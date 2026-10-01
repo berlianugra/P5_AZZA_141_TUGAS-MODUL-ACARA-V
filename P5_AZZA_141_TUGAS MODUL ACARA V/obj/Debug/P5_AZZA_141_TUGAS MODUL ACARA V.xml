@@ -1,0 +1,386 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+P5_AZZA_141_TUGAS MODUL ACARA V
+</name>
+</assembly>
+<members>
+<member name="T:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.akun">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.dashboard">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.kualitas">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.laporan_qc">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.produk_ng">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.produksi">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_23_165640">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_23_165839">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_23_165850">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_23_165909">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_23_165919">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_23_170749">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_23_170802">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_23_170947">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_23_170957">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_104525">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_104654">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_105633">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_105826">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_112516">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_113806">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_114625">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_114913">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_115211">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_115341">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_121334">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_130639">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_131806">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_141013">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_24_145833">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_25_011253">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_25_011825">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_25_011923">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_25_012605">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_25_012658">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_25_013133">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_055759">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_060246">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_060618">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_060843">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_061032">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_0610321">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_061825">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_071946">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_072001">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_072027">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_072248">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_072434">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_092327">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_095131">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_095156">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_100436">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_09_27_103004">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_142620">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_1426201">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_144442">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_1444421">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_144447">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_1444471">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_144602">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_144755">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_144848">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_1448481">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_144953">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_145352">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_145359">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.Screenshot_2026_10_01_150236">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.usulan_perbaikan">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.WhatsApp_Image_2026_09_23_at_16_24_41">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.WhatsApp_Image_2026_09_23_at_4_24_41_PM">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.WhatsApp_Image_2026_09_23_at_4_241">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:P5_AZZA_141_TUGAS_MODUL_ACARA_V.My.Resources.Resources.WhatsApp_Image_2026_09_23_at_4_242">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+</members>
+</doc>

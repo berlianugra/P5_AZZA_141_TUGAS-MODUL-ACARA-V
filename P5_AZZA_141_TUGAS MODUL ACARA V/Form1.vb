@@ -7,38 +7,36 @@ Public Class FormInputKualitas
     '========================================================
     ' FORM LOAD
     '========================================================
-    Private Sub FormInputKualitas_Load(
-        sender As Object,
-        e As EventArgs
-    ) Handles MyBase.Load
+    Private Sub FormInputKualitas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        RoundedButton(btnSimpan, 15)
-        RoundedButton(btnReset, 15)
+        'Membuat tombol menjadi rounded
+        BulatkanTombol(btnSimpan)
+        BulatkanTombol(btnReset)
 
-        'Tanggal awal = hari ini
+        'Tanggal otomatis hari ini
         dtpTanggal.Value = Date.Today
 
-        'Textbox hasil tidak dapat diketik manual
+        'TextBox hasil dibuat ReadOnly
         txtTotalProduksi.ReadOnly = True
         txtPersentaseCacat.ReadOnly = True
         txtLevelSigma.ReadOnly = True
         txtJumlahNG.ReadOnly = True
 
-        'Warna textbox hasil
-        txtJumlahNG.BackColor = Color.LightGray
+        'Warna TextBox hasil
         txtTotalProduksi.BackColor = Color.LightGray
         txtPersentaseCacat.BackColor = Color.LightGray
         txtLevelSigma.BackColor = Color.LightGray
+        txtJumlahNG.BackColor = Color.LightGray
 
-        'ComboBox tidak bisa diketik manual
+        'ComboBox hanya bisa memilih
         cmbNamaProduk.DropDownStyle = ComboBoxStyle.DropDownList
         cmbJenisNG.DropDownStyle = ComboBoxStyle.DropDownList
 
-        'Load data dari database
+        'Load data ComboBox
         LoadProduk()
         LoadJenisNG()
 
-        'Awal kosong
+        'Kosongkan hasil
         cmbNamaProduk.SelectedIndex = -1
         cmbJenisNG.SelectedIndex = -1
 
@@ -51,51 +49,51 @@ Public Class FormInputKualitas
 
 
     '========================================================
-    ' ROUNDED BUTTON
+    ' MEMBUAT TOMBOL BULAT
     '========================================================
-    Private Sub RoundedButton(btn As Button, radius As Integer)
+    Private Sub BulatkanTombol(btn As Button)
 
         Dim path As New GraphicsPath()
 
-        Dim d As Integer = radius * 2
-
-        path.StartFigure()
+        Dim radius As Integer = 20
 
         path.AddArc(
-            New Rectangle(0, 0, d, d),
+            0,
+            0,
+            radius,
+            radius,
             180,
             90
         )
 
         path.AddArc(
-            New Rectangle(btn.Width - d, 0, d, d),
+            btn.Width - radius,
+            0,
+            radius,
+            radius,
             270,
             90
         )
 
         path.AddArc(
-            New Rectangle(
-                btn.Width - d,
-                btn.Height - d,
-                d,
-                d
-            ),
+            btn.Width - radius,
+            btn.Height - radius,
+            radius,
+            radius,
             0,
             90
         )
 
         path.AddArc(
-            New Rectangle(
-                0,
-                btn.Height - d,
-                d,
-                d
-            ),
+            0,
+            btn.Height - radius,
+            radius,
+            radius,
             90,
             90
         )
 
-        path.CloseFigure()
+        path.CloseAllFigures()
 
         btn.Region = New Region(path)
 
@@ -109,8 +107,6 @@ Public Class FormInputKualitas
 
         Try
 
-            Koneksi()
-
             cmbNamaProduk.Items.Clear()
 
             Dim query As String =
@@ -118,52 +114,47 @@ Public Class FormInputKualitas
                 "FROM Produk " &
                 "ORDER BY Nama_Produk ASC"
 
-            cmd = New OleDbCommand(query, CNN)
+            Using cmd As New OleDbCommand(query, CNN)
 
-            Rd = cmd.ExecuteReader()
+                If CNN.State = ConnectionState.Closed Then
+                    CNN.Open()
+                End If
 
-            While Rd.Read()
+                Using Rd As OleDbDataReader = cmd.ExecuteReader()
 
-                cmbNamaProduk.Items.Add(
-                    New ProdukItem(
-                        Rd("ID_Produk").ToString(),
-                        Rd("Nama_Produk").ToString()
-                    )
-                )
+                    While Rd.Read()
 
-            End While
+                        Dim idProduk As Integer =
+                            Convert.ToInt32(Rd("ID_Produk"))
 
-            Rd.Close()
-            Rd = Nothing
+                        Dim namaProduk As String =
+                            Rd("Nama_Produk").ToString()
 
-            CNN.Close()
+                        cmbNamaProduk.Items.Add(
+                            New ProdukItem(idProduk, namaProduk)
+                        )
 
-            cmbNamaProduk.SelectedIndex = -1
+                    End While
+
+                End Using
+
+            End Using
 
         Catch ex As Exception
 
-            If Rd IsNot Nothing AndAlso
-               Not Rd.IsClosed Then
-
-                Rd.Close()
-
-            End If
-
-            If CNN IsNot Nothing AndAlso
-               CNN.State = ConnectionState.Open Then
-
-                CNN.Close()
-
-            End If
-
             MessageBox.Show(
-                "Gagal mengambil data produk." &
-                vbCrLf & vbCrLf &
-                ex.Message,
+                "Gagal memuat data produk." &
+                vbCrLf & ex.Message,
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
             )
+
+        Finally
+
+            If CNN.State = ConnectionState.Open Then
+                CNN.Close()
+            End If
 
         End Try
 
@@ -177,8 +168,6 @@ Public Class FormInputKualitas
 
         Try
 
-            Koneksi()
-
             cmbJenisNG.Items.Clear()
 
             Dim query As String =
@@ -187,49 +176,41 @@ Public Class FormInputKualitas
                 "WHERE Jenis_NG IS NOT NULL " &
                 "ORDER BY Jenis_NG ASC"
 
-            cmd = New OleDbCommand(query, CNN)
+            Using cmd As New OleDbCommand(query, CNN)
 
-            Rd = cmd.ExecuteReader()
+                If CNN.State = ConnectionState.Closed Then
+                    CNN.Open()
+                End If
 
-            While Rd.Read()
+                Using Rd As OleDbDataReader = cmd.ExecuteReader()
 
-                cmbJenisNG.Items.Add(
-                    Rd("Jenis_NG").ToString()
-                )
+                    While Rd.Read()
 
-            End While
+                        cmbJenisNG.Items.Add(
+                            Rd("Jenis_NG").ToString()
+                        )
 
-            Rd.Close()
-            Rd = Nothing
+                    End While
 
-            CNN.Close()
+                End Using
 
-            cmbJenisNG.SelectedIndex = -1
+            End Using
 
         Catch ex As Exception
 
-            If Rd IsNot Nothing AndAlso
-               Not Rd.IsClosed Then
-
-                Rd.Close()
-
-            End If
-
-            If CNN IsNot Nothing AndAlso
-               CNN.State = ConnectionState.Open Then
-
-                CNN.Close()
-
-            End If
-
             MessageBox.Show(
-                "Gagal mengambil jenis NG." &
-                vbCrLf & vbCrLf &
-                ex.Message,
+                "Gagal memuat jenis NG." &
+                vbCrLf & ex.Message,
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
             )
+
+        Finally
+
+            If CNN.State = ConnectionState.Open Then
+                CNN.Close()
+            End If
 
         End Try
 
@@ -237,7 +218,7 @@ Public Class FormInputKualitas
 
 
     '========================================================
-    ' PRODUK DIPILIH
+    ' SAAT PRODUK DIPILIH
     '========================================================
     Private Sub cmbNamaProduk_SelectedIndexChanged(
         sender As Object,
@@ -258,15 +239,14 @@ Public Class FormInputKualitas
         Dim produk As ProdukItem =
             CType(cmbNamaProduk.SelectedItem, ProdukItem)
 
-        'Tanggal TIDAK diubah.
-        'Tanggal yang dipilih user digunakan untuk mencari produksi.
+        'Ambil total produksi berdasarkan produk + tanggal
         AmbilTotalProduksi(
             produk.ID,
             dtpTanggal.Value.Date
         )
 
         'Kalau jenis NG sudah dipilih,
-        'ambil kembali jumlah NG sesuai produk + tanggal + jenis NG
+        'langsung ambil jumlah NG
         If cmbJenisNG.SelectedIndex <> -1 Then
 
             AmbilJumlahNG(
@@ -281,7 +261,7 @@ Public Class FormInputKualitas
 
 
     '========================================================
-    ' TANGGAL PRODUKSI BERUBAH
+    ' SAAT TANGGAL BERUBAH
     '========================================================
     Private Sub dtpTanggal_ValueChanged(
         sender As Object,
@@ -295,13 +275,13 @@ Public Class FormInputKualitas
         Dim produk As ProdukItem =
             CType(cmbNamaProduk.SelectedItem, ProdukItem)
 
-        'Tanggal hanya menjadi filter pencarian.
-        'Tanggal TIDAK diganti oleh database.
+        'Ambil total produksi sesuai tanggal
         AmbilTotalProduksi(
             produk.ID,
             dtpTanggal.Value.Date
         )
 
+        'Kalau jenis NG sudah dipilih
         If cmbJenisNG.SelectedIndex <> -1 Then
 
             AmbilJumlahNG(
@@ -316,82 +296,100 @@ Public Class FormInputKualitas
 
 
     '========================================================
-    ' AMBIL TOTAL PRODUKSI BERDASARKAN
-    ' PRODUK + TANGGAL
+    ' AMBIL TOTAL PRODUKSI
     '========================================================
     Private Sub AmbilTotalProduksi(
-        idProduk As String,
+        idProduk As Integer,
         tanggalProduksi As Date
     )
 
         Try
 
-            Koneksi()
+            txtTotalProduksi.Clear()
+            txtJumlahNG.Clear()
+            txtPersentaseCacat.Clear()
+            txtLevelSigma.Clear()
+
+            Dim tanggalBesok As Date =
+                tanggalProduksi.Date.AddDays(1)
 
             Dim query As String =
                 "SELECT TOP 1 ID_Total_Produk, Total_Produksi " &
                 "FROM Data_Pengelolaan_Total_Produksi " &
                 "WHERE ID_Produk = ? " &
-                "AND Tanggal_Produksi = ? " &
+                "AND Tanggal_Produksi >= ? " &
+                "AND Tanggal_Produksi < ? " &
                 "ORDER BY ID_Total_Produk DESC"
 
-            cmd = New OleDbCommand(query, CNN)
+            Using cmd As New OleDbCommand(query, CNN)
 
-            cmd.Parameters.AddWithValue(
-                "@ID_Produk",
-                idProduk
-            )
+                cmd.Parameters.AddWithValue(
+                    "@ID_Produk",
+                    idProduk
+                )
 
-            cmd.Parameters.AddWithValue(
-                "@Tanggal_Produksi",
-                tanggalProduksi
-            )
+                cmd.Parameters.AddWithValue(
+                    "@TanggalAwal",
+                    tanggalProduksi.Date
+                )
 
-            Rd = cmd.ExecuteReader()
+                cmd.Parameters.AddWithValue(
+                    "@TanggalBesok",
+                    tanggalBesok
+                )
 
-            If Rd.Read() Then
+                If CNN.State = ConnectionState.Closed Then
+                    CNN.Open()
+                End If
 
-                txtTotalProduksi.Text =
-                    Rd("Total_Produksi").ToString()
+                Using Rd As OleDbDataReader =
+                    cmd.ExecuteReader()
 
-            Else
+                    If Rd.Read() Then
 
-                txtTotalProduksi.Clear()
-                txtJumlahNG.Clear()
-                txtPersentaseCacat.Clear()
-                txtLevelSigma.Clear()
+                        txtTotalProduksi.Text =
+                            Rd("Total_Produksi").ToString()
+
+                    Else
+
+                        txtTotalProduksi.Clear()
+                        txtJumlahNG.Clear()
+                        txtPersentaseCacat.Clear()
+                        txtLevelSigma.Clear()
+
+                    End If
+
+                End Using
+
+            End Using
+
+            'Kalau jenis NG sudah dipilih,
+            'ambil jumlah NG juga
+            If cmbJenisNG.SelectedIndex <> -1 Then
+
+                AmbilJumlahNG(
+                    idProduk,
+                    tanggalProduksi,
+                    cmbJenisNG.Text
+                )
 
             End If
-
-            Rd.Close()
-            Rd = Nothing
-
-            CNN.Close()
 
         Catch ex As Exception
 
-            If Rd IsNot Nothing AndAlso
-               Not Rd.IsClosed Then
-
-                Rd.Close()
-
-            End If
-
-            If CNN IsNot Nothing AndAlso
-               CNN.State = ConnectionState.Open Then
-
-                CNN.Close()
-
-            End If
-
             MessageBox.Show(
                 "Gagal mengambil total produksi." &
-                vbCrLf & vbCrLf &
-                ex.Message,
+                vbCrLf & ex.Message,
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
             )
+
+        Finally
+
+            If CNN.State = ConnectionState.Open Then
+                CNN.Close()
+            End If
 
         End Try
 
@@ -399,7 +397,7 @@ Public Class FormInputKualitas
 
 
     '========================================================
-    ' JENIS NG DIPILIH
+    ' SAAT JENIS NG DIPILIH
     '========================================================
     Private Sub cmbJenisNG_SelectedIndexChanged(
         sender As Object,
@@ -428,56 +426,82 @@ Public Class FormInputKualitas
 
     '========================================================
     ' AMBIL JUMLAH NG
-    ' BERDASARKAN PRODUK + TANGGAL + JENIS NG
     '========================================================
     Private Sub AmbilJumlahNG(
-        idProduk As String,
+        idProduk As Integer,
         tanggalProduksi As Date,
         jenisNG As String
     )
 
         Try
 
-            Koneksi()
+            txtJumlahNG.Clear()
+            txtPersentaseCacat.Clear()
+            txtLevelSigma.Clear()
 
-            'Cari ID Total Produksi sesuai produk + tanggal
-            Dim queryTotal As String =
+            Dim idTotalProduk As Integer = 0
+
+            Dim tanggalBesok As Date =
+                tanggalProduksi.Date.AddDays(1)
+
+            '-----------------------------------------------
+            ' CARI ID TOTAL PRODUKSI
+            '-----------------------------------------------
+            Dim queryTotalProduksi As String =
                 "SELECT TOP 1 ID_Total_Produk " &
                 "FROM Data_Pengelolaan_Total_Produksi " &
                 "WHERE ID_Produk = ? " &
-                "AND Tanggal_Produksi = ? " &
+                "AND Tanggal_Produksi >= ? " &
+                "AND Tanggal_Produksi < ? " &
                 "ORDER BY ID_Total_Produk DESC"
 
-            cmd = New OleDbCommand(queryTotal, CNN)
-
-            cmd.Parameters.AddWithValue(
-                "@ID_Produk",
-                idProduk
+            Using cmdTotal As New OleDbCommand(
+                queryTotalProduksi,
+                CNN
             )
 
-            cmd.Parameters.AddWithValue(
-                "@Tanggal_Produksi",
-                tanggalProduksi
-            )
+                cmdTotal.Parameters.AddWithValue(
+                    "@ID_Produk",
+                    idProduk
+                )
 
-            Dim idTotalProduk As Object =
-                cmd.ExecuteScalar()
+                cmdTotal.Parameters.AddWithValue(
+                    "@TanggalAwal",
+                    tanggalProduksi.Date
+                )
 
-            If idTotalProduk Is Nothing OrElse
-               IsDBNull(idTotalProduk) Then
+                cmdTotal.Parameters.AddWithValue(
+                    "@TanggalBesok",
+                    tanggalBesok
+                )
 
-                txtJumlahNG.Clear()
-                txtPersentaseCacat.Clear()
-                txtLevelSigma.Clear()
+                If CNN.State = ConnectionState.Closed Then
+                    CNN.Open()
+                End If
 
-                CNN.Close()
+                Dim hasil As Object =
+                    cmdTotal.ExecuteScalar()
 
-                Exit Sub
+                If hasil Is Nothing OrElse
+                   hasil Is DBNull.Value Then
 
-            End If
+                    txtJumlahNG.Clear()
+                    txtPersentaseCacat.Clear()
+                    txtLevelSigma.Clear()
+
+                    Exit Sub
+
+                End If
+
+                idTotalProduk =
+                    Convert.ToInt32(hasil)
+
+            End Using
 
 
-            'Cari jumlah NG
+            '-----------------------------------------------
+            ' CARI JUMLAH NG
+            '-----------------------------------------------
             Dim queryNG As String =
                 "SELECT TOP 1 Jumlah_NG " &
                 "FROM Data_Produk_NG " &
@@ -485,56 +509,61 @@ Public Class FormInputKualitas
                 "AND Jenis_NG = ? " &
                 "ORDER BY ID_NG DESC"
 
-            cmd = New OleDbCommand(queryNG, CNN)
-
-            cmd.Parameters.AddWithValue(
-                "@ID_Total_Produk",
-                idTotalProduk.ToString()
+            Using cmdNG As New OleDbCommand(
+                queryNG,
+                CNN
             )
 
-            cmd.Parameters.AddWithValue(
-                "@Jenis_NG",
-                jenisNG
-            )
+                cmdNG.Parameters.AddWithValue(
+                    "@ID_Total_Produk",
+                    idTotalProduk
+                )
 
-            Dim jumlahNG As Object =
-                cmd.ExecuteScalar()
+                cmdNG.Parameters.AddWithValue(
+                    "@Jenis_NG",
+                    jenisNG
+                )
 
-            If jumlahNG IsNot Nothing AndAlso
-               Not IsDBNull(jumlahNG) Then
+                If CNN.State = ConnectionState.Closed Then
+                    CNN.Open()
+                End If
 
-                txtJumlahNG.Text =
-                    jumlahNG.ToString()
+                Dim hasilNG As Object =
+                    cmdNG.ExecuteScalar()
 
-            Else
+                If hasilNG Is Nothing OrElse
+                   hasilNG Is DBNull.Value Then
 
-                txtJumlahNG.Clear()
-                txtPersentaseCacat.Clear()
-                txtLevelSigma.Clear()
+                    txtJumlahNG.Clear()
+                    txtPersentaseCacat.Clear()
+                    txtLevelSigma.Clear()
 
-            End If
+                Else
 
-            CNN.Close()
+                    txtJumlahNG.Text =
+                        hasilNG.ToString()
 
-            HitungKualitas()
+                    HitungKualitas()
+
+                End If
+
+            End Using
 
         Catch ex As Exception
 
-            If CNN IsNot Nothing AndAlso
-               CNN.State = ConnectionState.Open Then
-
-                CNN.Close()
-
-            End If
-
             MessageBox.Show(
                 "Gagal mengambil jumlah NG." &
-                vbCrLf & vbCrLf &
-                ex.Message,
+                vbCrLf & ex.Message,
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
             )
+
+        Finally
+
+            If CNN.State = ConnectionState.Open Then
+                CNN.Close()
+            End If
 
         End Try
 
@@ -542,7 +571,7 @@ Public Class FormInputKualitas
 
 
     '========================================================
-    ' HITUNG KUALITAS
+    ' JUMLAH NG BERUBAH
     '========================================================
     Private Sub txtJumlahNG_TextChanged(
         sender As Object,
@@ -554,11 +583,15 @@ Public Class FormInputKualitas
     End Sub
 
 
+    '========================================================
+    ' HITUNG PERSENTASE CACAT + SIGMA
+    '========================================================
     Private Sub HitungKualitas()
 
         Dim jumlahNG As Double
         Dim totalProduksi As Double
 
+        'Kalau data belum lengkap
         If Not Double.TryParse(
             txtJumlahNG.Text,
             jumlahNG
@@ -570,6 +603,7 @@ Public Class FormInputKualitas
             Exit Sub
 
         End If
+
 
         If Not Double.TryParse(
             txtTotalProduksi.Text,
@@ -583,6 +617,8 @@ Public Class FormInputKualitas
 
         End If
 
+
+        'Menghindari pembagian dengan 0
         If totalProduksi <= 0 Then
 
             txtPersentaseCacat.Clear()
@@ -592,17 +628,10 @@ Public Class FormInputKualitas
 
         End If
 
-        If jumlahNG < 0 Then
 
-            txtPersentaseCacat.Clear()
-            txtLevelSigma.Clear()
-
-            Exit Sub
-
-        End If
-
-
-        'Persentase cacat
+        '-----------------------------------------------
+        ' PERSENTASE CACAT
+        '-----------------------------------------------
         Dim persentaseCacat As Double =
             (jumlahNG / totalProduksi) * 100
 
@@ -610,12 +639,16 @@ Public Class FormInputKualitas
             persentaseCacat.ToString("0.00") & " %"
 
 
-        'DPMO
+        '-----------------------------------------------
+        ' DPMO
+        '-----------------------------------------------
         Dim dpmo As Double =
             (jumlahNG / totalProduksi) * 1000000
 
 
-        'Level Sigma
+        '-----------------------------------------------
+        ' LEVEL SIGMA
+        '-----------------------------------------------
         Dim sigma As Double
 
         If dpmo <= 0 Then
@@ -636,8 +669,15 @@ Public Class FormInputKualitas
         End If
 
 
-        If sigma < 0 Then sigma = 0
-        If sigma > 6 Then sigma = 6
+        'Batas Sigma 0 - 6
+        If sigma < 0 Then
+            sigma = 0
+        End If
+
+        If sigma > 6 Then
+            sigma = 6
+        End If
+
 
         txtLevelSigma.Text =
             sigma.ToString("0.00")
@@ -651,58 +691,125 @@ Public Class FormInputKualitas
     Private Function NormalInverse(p As Double) As Double
 
         If p <= 0 OrElse p >= 1 Then
-            Throw New ArgumentOutOfRangeException()
+
+            If p <= 0 Then
+                Return Double.NegativeInfinity
+            Else
+                Return Double.PositiveInfinity
+            End If
+
         End If
 
-        Dim a1 As Double = -39.6968302866538
-        Dim a2 As Double = 220.946098424521
-        Dim a3 As Double = -275.928510446969
-        Dim a4 As Double = 138.357751867269
-        Dim a5 As Double = -30.6647980661472
-        Dim a6 As Double = 2.50662827745924
 
-        Dim b1 As Double = -54.4760987982241
-        Dim b2 As Double = 161.585836858041
-        Dim b3 As Double = -155.698979859888
-        Dim b4 As Double = 66.8013118877197
-        Dim b5 As Double = -13.2806815528857
+        Dim a1 As Double =
+            -39.6968302866538
 
-        Dim c1 As Double = -0.00778489400243029
-        Dim c2 As Double = -0.322396458041136
-        Dim c3 As Double = -2.40075827716184
-        Dim c4 As Double = -2.54973253934373
-        Dim c5 As Double = 4.37466414146497
-        Dim c6 As Double = 2.93816398269878
+        Dim a2 As Double =
+            220.946098424521
 
-        Dim d1 As Double = 0.00778469570904146
-        Dim d2 As Double = 0.32246712907004
-        Dim d3 As Double = 2.445134137143
-        Dim d4 As Double = 3.75440866190742
+        Dim a3 As Double =
+            -275.928510446969
+
+        Dim a4 As Double =
+            138.357751867269
+
+        Dim a5 As Double =
+            -30.6647980661472
+
+        Dim a6 As Double =
+            2.50662827745924
+
+
+        Dim b1 As Double =
+            -54.4760987982241
+
+        Dim b2 As Double =
+            161.585836858041
+
+        Dim b3 As Double =
+            -155.698979859887
+
+        Dim b4 As Double =
+            66.8013118877197
+
+        Dim b5 As Double =
+            -13.2806815528857
+
+
+        Dim c1 As Double =
+            -0.00778489400243029
+
+        Dim c2 As Double =
+            -0.322396458041136
+
+        Dim c3 As Double =
+            -2.40075827716184
+
+        Dim c4 As Double =
+            -2.54973253934373
+
+        Dim c5 As Double =
+            4.37466414146497
+
+        Dim c6 As Double =
+            2.93816398269878
+
+
+        Dim d1 As Double =
+            0.00778469570904146
+
+        Dim d2 As Double =
+            0.32246712907004
+
+        Dim d3 As Double =
+            2.445134137143
+
+        Dim d4 As Double =
+            3.75440866190742
+
 
         Dim q As Double
         Dim r As Double
 
+
         If p < 0.02425 Then
 
-            q = Math.Sqrt(-2 * Math.Log(p))
+            q = Math.Sqrt(
+                -2 * Math.Log(p)
+            )
 
-            Return (((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6) /
-                   ((((d1 * q + d2) * q + d3) * q + d4) * q + 1)
+            Return (
+                ((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6
+            ) /
+            (
+                (((d1 * q + d2) * q + d3) * q + d4) * q + 1
+            )
 
         ElseIf p > 1 - 0.02425 Then
 
-            q = Math.Sqrt(-2 * Math.Log(1 - p))
+            q = Math.Sqrt(
+                -2 * Math.Log(1 - p)
+            )
 
-            Return -(((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6) /
-                    ((((d1 * q + d2) * q + d3) * q + d4) * q + 1)
+            Return -(
+                ((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6
+            ) /
+            (
+                (((d1 * q + d2) * q + d3) * q + d4) * q + 1
+            )
 
         Else
 
             q = p - 0.5
+
             r = q * q
 
-            Return (((((a1 * r + a2) * r + a3) * r + a4) * r + a5) * r + a6) * q /
-                   (((((b1 * r + b2) * r + b3) * r + b4) * r + b5) * r + 1)
+            Return (
+                (((((a1 * r + a2) * r + a3) * r + a4) * r + a5) * r + a6) * q
+            ) /
+            (
+                ((((b1 * r + b2) * r + b3) * r + b4) * r + b5) * r + 1
+            )
 
         End If
 
@@ -714,51 +821,61 @@ Public Class FormInputKualitas
     '========================================================
     Private Function GenerateIDKualitas() As String
 
+        Dim nomorBaru As Integer = 1
+
         Try
 
-            If CNN Is Nothing OrElse
-               CNN.State <> ConnectionState.Open Then
-
-                Koneksi()
-
-            End If
-
             Dim query As String =
-                "SELECT MAX(Val(Mid(ID_Kualitas, 2))) " &
-                "FROM Data_Kualitas"
+                "SELECT MAX(ID_Kualitas) FROM Data_Kualitas"
 
-            cmd = New OleDbCommand(query, CNN)
+            Using cmd As New OleDbCommand(query, CNN)
 
-            Dim hasil As Object =
-                cmd.ExecuteScalar()
+                If CNN.State = ConnectionState.Closed Then
+                    CNN.Open()
+                End If
 
-            If hasil Is Nothing OrElse
-               IsDBNull(hasil) Then
+                Dim hasil As Object =
+                    cmd.ExecuteScalar()
 
-                Return "K001"
+                If hasil IsNot Nothing AndAlso
+                   hasil IsNot DBNull.Value Then
 
-            End If
+                    Dim idTerakhir As String =
+                        hasil.ToString()
 
-            Dim nomorTerakhir As Integer =
-                CInt(hasil) + 1
+                    If idTerakhir.StartsWith("K") Then
 
-            Return "K" &
-                nomorTerakhir.ToString("D3")
+                        Dim angka As Integer
+
+                        If Integer.TryParse(
+                            idTerakhir.Substring(1),
+                            angka
+                        ) Then
+
+                            nomorBaru = angka + 1
+
+                        End If
+
+                    End If
+
+                End If
+
+            End Using
 
         Catch ex As Exception
 
-            MessageBox.Show(
-                "Gagal membuat ID Kualitas." &
-                vbCrLf & vbCrLf &
-                ex.Message,
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            )
+            nomorBaru = 1
 
-            Return ""
+        Finally
+
+            If CNN.State = ConnectionState.Open Then
+                CNN.Close()
+            End If
 
         End Try
+
+
+        Return "K" & nomorBaru.ToString("000")
 
     End Function
 
@@ -766,60 +883,157 @@ Public Class FormInputKualitas
     '========================================================
     ' SIMPAN DATA KUALITAS
     '========================================================
-    Private Sub SimpanDataKualitas()
+    Private Sub btnSimpan_Click(
+        sender As Object,
+        e As EventArgs
+    ) Handles btnSimpan.Click
+
+        'Validasi produk
+        If cmbNamaProduk.SelectedIndex = -1 Then
+
+            MessageBox.Show(
+                "Silakan pilih produk terlebih dahulu.",
+                "Peringatan",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            )
+
+            Exit Sub
+
+        End If
+
+
+        'Validasi jenis NG
+        If cmbJenisNG.SelectedIndex = -1 Then
+
+            MessageBox.Show(
+                "Silakan pilih jenis NG terlebih dahulu.",
+                "Peringatan",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            )
+
+            Exit Sub
+
+        End If
+
+
+        'Validasi total produksi
+        If String.IsNullOrWhiteSpace(
+            txtTotalProduksi.Text
+        ) Then
+
+            MessageBox.Show(
+                "Data total produksi untuk tanggal dan produk tersebut tidak ditemukan.",
+                "Peringatan",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            )
+
+            Exit Sub
+
+        End If
+
+
+        'Validasi jumlah NG
+        If String.IsNullOrWhiteSpace(
+            txtJumlahNG.Text
+        ) Then
+
+            MessageBox.Show(
+                "Data jumlah NG untuk jenis NG tersebut tidak ditemukan.",
+                "Peringatan",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            )
+
+            Exit Sub
+
+        End If
+
 
         Try
-
-            Koneksi()
 
             Dim produk As ProdukItem =
                 CType(cmbNamaProduk.SelectedItem, ProdukItem)
 
+            Dim tanggalProduksi As Date =
+                dtpTanggal.Value.Date
 
-            'Cari ID Total Produksi
+            Dim jenisNG As String =
+                cmbJenisNG.Text
+
+
+            '================================================
+            ' CARI ID TOTAL PRODUKSI
+            '================================================
+            Dim idTotalProduk As Integer = 0
+
+            Dim tanggalBesok As Date =
+                tanggalProduksi.AddDays(1)
+
             Dim queryTotal As String =
                 "SELECT TOP 1 ID_Total_Produk " &
                 "FROM Data_Pengelolaan_Total_Produksi " &
                 "WHERE ID_Produk = ? " &
-                "AND Tanggal_Produksi = ? " &
+                "AND Tanggal_Produksi >= ? " &
+                "AND Tanggal_Produksi < ? " &
                 "ORDER BY ID_Total_Produk DESC"
 
-            cmd = New OleDbCommand(
+
+            If CNN.State = ConnectionState.Closed Then
+                CNN.Open()
+            End If
+
+
+            Using cmdTotal As New OleDbCommand(
                 queryTotal,
                 CNN
             )
 
-            cmd.Parameters.AddWithValue(
-                "@ID_Produk",
-                produk.ID
-            )
-
-            cmd.Parameters.AddWithValue(
-                "@Tanggal_Produksi",
-                dtpTanggal.Value.Date
-            )
-
-            Dim idTotalProduk As Object =
-                cmd.ExecuteScalar()
-
-            If idTotalProduk Is Nothing OrElse
-               IsDBNull(idTotalProduk) Then
-
-                CNN.Close()
-
-                MessageBox.Show(
-                    "Data total produksi untuk produk dan tanggal tersebut tidak ditemukan.",
-                    "Peringatan",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
+                cmdTotal.Parameters.AddWithValue(
+                    "@ID_Produk",
+                    produk.ID
                 )
 
-                Exit Sub
+                cmdTotal.Parameters.AddWithValue(
+                    "@TanggalAwal",
+                    tanggalProduksi
+                )
 
-            End If
+                cmdTotal.Parameters.AddWithValue(
+                    "@TanggalBesok",
+                    tanggalBesok
+                )
+
+                Dim hasilTotal As Object =
+                    cmdTotal.ExecuteScalar()
+
+                If hasilTotal Is Nothing OrElse
+                   hasilTotal Is DBNull.Value Then
+
+                    MessageBox.Show(
+                        "Data total produksi tidak ditemukan.",
+                        "Peringatan",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    )
+
+                    Exit Sub
+
+                End If
+
+                idTotalProduk =
+                    Convert.ToInt32(hasilTotal)
+
+            End Using
 
 
-            'Cari ID NG
+            '================================================
+            ' CARI ID NG
+            '================================================
+            Dim idNG As Integer = 0
+
             Dim queryNG As String =
                 "SELECT TOP 1 ID_NG " &
                 "FROM Data_Produk_NG " &
@@ -827,123 +1041,128 @@ Public Class FormInputKualitas
                 "AND Jenis_NG = ? " &
                 "ORDER BY ID_NG DESC"
 
-            cmd = New OleDbCommand(
+
+            Using cmdNG As New OleDbCommand(
                 queryNG,
                 CNN
             )
 
-            cmd.Parameters.AddWithValue(
-                "@ID_Total_Produk",
-                idTotalProduk.ToString()
-            )
-
-            cmd.Parameters.AddWithValue(
-                "@Jenis_NG",
-                cmbJenisNG.Text
-            )
-
-            Dim idNG As Object =
-                cmd.ExecuteScalar()
-
-            If idNG Is Nothing OrElse
-               IsDBNull(idNG) Then
-
-                CNN.Close()
-
-                MessageBox.Show(
-                    "Data jenis NG tidak ditemukan.",
-                    "Peringatan",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
+                cmdNG.Parameters.AddWithValue(
+                    "@ID_Total_Produk",
+                    idTotalProduk
                 )
 
-                Exit Sub
+                cmdNG.Parameters.AddWithValue(
+                    "@Jenis_NG",
+                    jenisNG
+                )
 
-            End If
+                Dim hasilNG As Object =
+                    cmdNG.ExecuteScalar()
+
+                If hasilNG Is Nothing OrElse
+                   hasilNG Is DBNull.Value Then
+
+                    MessageBox.Show(
+                        "Data jenis NG tidak ditemukan.",
+                        "Peringatan",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    )
+
+                    Exit Sub
+
+                End If
+
+                idNG =
+                    Convert.ToInt32(hasilNG)
+
+            End Using
 
 
-            'Generate ID Kualitas
+            '================================================
+            ' GENERATE ID KUALITAS
+            '================================================
             Dim idKualitas As String =
                 GenerateIDKualitas()
 
-            If idKualitas = "" Then
 
-                CNN.Close()
-
-                Exit Sub
-
-            End If
-
-
-            'Insert
-            Dim queryInsert As String =
+            '================================================
+            ' SIMPAN DATA
+            '================================================
+            Dim querySimpan As String =
                 "INSERT INTO Data_Kualitas " &
                 "(ID_Kualitas, No_ID, Level_Sigma, ID_NG, ID_Total_Produk) " &
                 "VALUES (?, ?, ?, ?, ?)"
 
-            cmd = New OleDbCommand(
-                queryInsert,
+
+            Using cmdSimpan As New OleDbCommand(
+                querySimpan,
                 CNN
             )
 
-            cmd.Parameters.AddWithValue(
-                "@ID_Kualitas",
-                idKualitas
-            )
+                cmdSimpan.Parameters.AddWithValue(
+                    "@ID_Kualitas",
+                    idKualitas
+                )
 
-            cmd.Parameters.AddWithValue(
-                "@No_ID",
-                A
-            )
+                'Tetap menggunakan A seperti kode sebelumnya
+                cmdSimpan.Parameters.AddWithValue(
+                    "@No_ID",
+                    A
+                )
 
-            cmd.Parameters.AddWithValue(
-                "@Level_Sigma",
-                CDbl(txtLevelSigma.Text)
-            )
+                cmdSimpan.Parameters.AddWithValue(
+                    "@Level_Sigma",
+                    txtLevelSigma.Text
+                )
 
-            cmd.Parameters.AddWithValue(
-                "@ID_NG",
-                idNG.ToString()
-            )
+                cmdSimpan.Parameters.AddWithValue(
+                    "@ID_NG",
+                    idNG
+                )
 
-            cmd.Parameters.AddWithValue(
-                "@ID_Total_Produk",
-                idTotalProduk.ToString()
-            )
-
-            cmd.ExecuteNonQuery()
-
-            CNN.Close()
+                cmdSimpan.Parameters.AddWithValue(
+                    "@ID_Total_Produk",
+                    idTotalProduk
+                )
 
 
-            MessageBox.Show(
-                "Data kualitas berhasil disimpan ke database." &
-                vbCrLf & vbCrLf &
-                "ID Kualitas : " & idKualitas,
-                "Berhasil",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            )
+                Dim hasil As Integer =
+                    cmdSimpan.ExecuteNonQuery()
 
-            ResetForm()
+
+                If hasil > 0 Then
+
+                    MessageBox.Show(
+                        "Data kualitas berhasil disimpan.",
+                        "Berhasil",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    )
+
+                    ResetForm()
+
+                End If
+
+            End Using
+
 
         Catch ex As Exception
 
-            If CNN IsNot Nothing AndAlso
-               CNN.State = ConnectionState.Open Then
-
-                CNN.Close()
-
-            End If
-
             MessageBox.Show(
-                "Data gagal disimpan ke database." &
-                vbCrLf & vbCrLf &
-                ex.Message,
+                "Data kualitas gagal disimpan." &
+                vbCrLf & ex.Message,
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
             )
+
+        Finally
+
+            If CNN.State = ConnectionState.Open Then
+                CNN.Close()
+            End If
 
         End Try
 
@@ -951,7 +1170,7 @@ Public Class FormInputKualitas
 
 
     '========================================================
-    ' RESET
+    ' RESET FORM
     '========================================================
     Private Sub btnReset_Click(
         sender As Object,
@@ -970,169 +1189,14 @@ Public Class FormInputKualitas
         cmbNamaProduk.SelectedIndex = -1
         cmbJenisNG.SelectedIndex = -1
 
-        txtJumlahNG.Clear()
         txtTotalProduksi.Clear()
+        txtJumlahNG.Clear()
         txtPersentaseCacat.Clear()
         txtLevelSigma.Clear()
 
-        cmbNamaProduk.Focus()
-
     End Sub
 
-
-    '========================================================
-    ' SIMPAN
-    '========================================================
-    Private Sub btnSimpan_Click(
-        sender As Object,
-        e As EventArgs
-    ) Handles btnSimpan.Click
-
-        If cmbNamaProduk.SelectedIndex = -1 Then
-
-            MessageBox.Show(
-                "Silakan pilih nama produk.",
-                "Peringatan",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            )
-
-            cmbNamaProduk.Focus()
-
-            Exit Sub
-
-        End If
-
-
-        If cmbJenisNG.SelectedIndex = -1 Then
-
-            MessageBox.Show(
-                "Silakan pilih jenis NG.",
-                "Peringatan",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            )
-
-            cmbJenisNG.Focus()
-
-            Exit Sub
-
-        End If
-
-
-        Dim jumlahNG As Double
-
-        If Not Double.TryParse(
-            txtJumlahNG.Text,
-            jumlahNG
-        ) Then
-
-            MessageBox.Show(
-                "Jumlah NG belum tersedia.",
-                "Peringatan",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            )
-
-            Exit Sub
-
-        End If
-
-
-        Dim totalProduksi As Double
-
-        If Not Double.TryParse(
-            txtTotalProduksi.Text,
-            totalProduksi
-        ) Then
-
-            MessageBox.Show(
-                "Total produksi belum tersedia.",
-                "Peringatan",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            )
-
-            Exit Sub
-
-        End If
-
-
-        If jumlahNG < 0 Then
-
-            MessageBox.Show(
-                "Jumlah NG tidak boleh kurang dari 0.",
-                "Peringatan",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            )
-
-            Exit Sub
-
-        End If
-
-
-        If jumlahNG > totalProduksi Then
-
-            MessageBox.Show(
-                "Jumlah NG tidak boleh lebih besar dari total produksi.",
-                "Peringatan",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            )
-
-            Exit Sub
-
-        End If
-
-
-        Dim pesan As String =
-            "Data kualitas akan disimpan." &
-            vbCrLf & vbCrLf &
-            "Tanggal          : " &
-            dtpTanggal.Value.ToString("dd/MM/yyyy") &
-            vbCrLf &
-            "Nama Produk      : " &
-            cmbNamaProduk.Text &
-            vbCrLf &
-            "Jenis NG         : " &
-            cmbJenisNG.Text &
-            vbCrLf &
-            "Jumlah NG        : " &
-            txtJumlahNG.Text &
-            vbCrLf &
-            "Total Produksi   : " &
-            txtTotalProduksi.Text &
-            vbCrLf &
-            "Persentase Cacat : " &
-            txtPersentaseCacat.Text &
-            vbCrLf &
-            "Level Sigma      : " &
-            txtLevelSigma.Text
-
-
-        Dim hasil As DialogResult =
-            MessageBox.Show(
-                pesan,
-                "Konfirmasi Simpan",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            )
-
-
-        If hasil = DialogResult.Yes Then
-
-            SimpanDataKualitas()
-
-        End If
-
-    End Sub
-
-
-    '========================================================
-    ' KEMBALI KE DASHBOARD
-    '========================================================
-    Private Sub Label1_Click(
+    Private Sub lblDashboardKualitas_Click(
         sender As Object,
         e As EventArgs
     ) Handles lblDashboardKualitas.Click
@@ -1142,243 +1206,14 @@ Public Class FormInputKualitas
 
     End Sub
 
-
-    Private Sub Label19_Click(
+    Private Sub lblProduksiKualitas_Click(
         sender As Object,
         e As EventArgs
     ) Handles lblProduksiKualitas.Click
 
-        FormDashboardKualitas.Show()
-        Me.Hide()
-
-    End Sub
-    Private produksiTerbuka As Boolean = False
-    Private ukuranAwalbtnLogout As Size
-    Private posisiAwalbtnLogout As Point
-
-    Private Sub FormDashboardKualitas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-        'Simpan ukuran dan posisi awal tombol Logout
-        ukuranAwalbtnLogout = btnLogoutIK.Size
-        posisiAwalbtnLogout = btnLogoutIK.Location
-
-        '========================================
-        ' KONDISI AWAL
-        '========================================
-
-        produksiTerbuka = False
-
-        lblKualitas.Visible = True
-
-        lblInputKualitas.Visible = False
-        lblRiwayatKualitas.Visible = False
-
-        'Warna awal
-        lblKualitas.BackColor = Color.Transparent
-        lblInputKualitas.BackColor = Color.Transparent
-        lblRiwayatKualitas.BackColor = Color.Transparent
-
-        'Font awal
-        lblKualitas.Font =
-            New Font(lblKualitas.Font, FontStyle.Regular)
-
-        'Pastikan Kualitas berada di depan
-        lblKualitas.BringToFront()
-    End Sub
-
-    Private Sub lblKualitas_Click(sender As Object, e As EventArgs) Handles lblKualitas.Click
-
-        If produksiTerbuka = False Then
-
-            produksiTerbuka = True
-
-            'Tampilkan submenu
-            lblInputKualitas.Visible = True
-            lblRiwayatKualitas.Visible = True
-
-            'Menu Kualitas aktif
-            lblKualitas.BackColor =
-            Color.FromArgb(45, 99, 181)
-
-            lblKualitas.Font =
-            New Font(lblKualitas.Font, FontStyle.Bold)
-
-            'Pastikan tampil di depan
-            lblInputKualitas.BringToFront()
-            lblRiwayatKualitas.BringToFront()
-            lblKualitas.BringToFront()
-
-        Else
-
-            '========================================
-            ' JIKA MENU SUDAH TERBUKA
-            ' MAKA TUTUP
-            '========================================
-
-            produksiTerbuka = False
-
-            'Sembunyikan submenu
-            lblInputKualitas.Visible = False
-            lblRiwayatKualitas.Visible = False
-
-            'Kembalikan Kualitas
-            lblKualitas.BackColor = Color.Transparent
-
-            lblKualitas.Font =
-            New Font(lblKualitas.Font, FontStyle.Regular)
-
-        End If
-
-    End Sub
-
-
-
-    Private Sub lblProduksiKualitas_Click(sender As Object, e As EventArgs) Handles lblProduksiKualitas.Click
-        Dim formProduksiKualitas As New FormInputKualitas()
-        formProduksiKualitas.Show()
-        Me.Hide()
-    End Sub
-
-
-    'Riwayat Produksi
-    Private Sub lblInputKualitas_Click(sender As Object, e As EventArgs) Handles lblRiwayatKualitas.Click, lblInputKualitas.Click
-
-        Dim FormInputKualitas As New FormInputKualitas()
-        FormInputKualitas.Show()
+        FormProduksi.Show()
         Me.Hide()
 
     End Sub
 
-    'PictureBox Riwayat Produksi
-    Private Sub lblNG_Click(sender As Object, e As EventArgs) Handles lblNGKualitas.Click
-
-        Dim FormProdukNG As New formRiwayatKualitas()
-        FormProdukNG.Show()
-        Me.Hide()
-
-    End Sub
-
-    'Hover Input
-    Private Sub lblInput_MouseEnter(sender As Object, e As EventArgs) Handles lblInputKualitas.MouseEnter
-
-        lblInputKualitas.BackColor = Color.DarkOrange
-
-    End Sub
-
-    Private Sub lblInput_MouseLeave(sender As Object, e As EventArgs) Handles lblInputKualitas.MouseLeave
-
-        lblInputKualitas.BackColor = Color.Transparent
-
-    End Sub
-
-    'Hover Riwayat
-    Private Sub lblRiwayat_MouseEnter(sender As Object, e As EventArgs) Handles lblRiwayatKualitas.MouseEnter
-
-        lblRiwayatKualitas.BackColor = Color.DarkOrange
-
-    End Sub
-
-    Private Sub lblRiwayat_MouseLeave(sender As Object, e As EventArgs) Handles lblRiwayatKualitas.MouseLeave
-
-        lblRiwayatKualitas.BackColor = Color.Transparent
-
-    End Sub
-
-    'Hover Dashboard
-    Private Sub lblDashboard_MouseEnter(sender As Object, e As EventArgs) Handles lblDashboardKualitas.MouseEnter
-
-        lblDashboardKualitas.BackColor = Color.FromArgb(45, 99, 181)
-
-    End Sub
-
-    Private Sub lblDashboard_MouseLeave(sender As Object, e As EventArgs) Handles lblDashboardKualitas.MouseLeave
-
-        lblDashboardKualitas.BackColor = Color.Transparent
-
-    End Sub
-
-    'Hover Produksi
-    Private Sub lblProduksi_MouseEnter(sender As Object, e As EventArgs) Handles lblKualitas.MouseEnter
-
-        lblKualitas.BackColor = Color.FromArgb(45, 99, 181)
-
-    End Sub
-
-    Private Sub lblProduksi_MouseLeave(sender As Object, e As EventArgs) Handles lblKualitas.MouseLeave
-
-        lblKualitas.BackColor = Color.Transparent
-
-    End Sub
-
-    'Hover NG
-    Private Sub lblNG_MouseEnter(sender As Object, e As EventArgs) Handles lblNGKualitas.MouseEnter
-
-        lblNGKualitas.BackColor = Color.FromArgb(45, 99, 181)
-
-    End Sub
-
-    Private Sub lblNG_MouseLeave(sender As Object, e As EventArgs) Handles lblNGKualitas.MouseLeave
-
-        lblNGKualitas.BackColor = Color.Transparent
-
-    End Sub
-
-
-    'Pop-up PictureBox Input
-    Private Sub btnLogout_MouseEnter(sender As Object, e As EventArgs) Handles btnLogoutIK.MouseEnter
-
-        btnLogoutIK.Size = New Size(
-            ukuranAwalbtnLogout.Width + 8,
-            ukuranAwalbtnLogout.Height + 8
-        )
-
-        btnLogoutIK.Location = New Point(
-            posisiAwalbtnLogout.X - 4,
-            posisiAwalbtnLogout.Y - 4
-        )
-
-    End Sub
-
-    Private Sub btnLogout_MouseLeave(sender As Object, e As EventArgs) Handles btnLogoutIK.MouseLeave
-
-        btnLogoutIK.Size = ukuranAwalbtnLogout
-        btnLogoutIK.Location = posisiAwalbtnLogout
-
-    End Sub
-
-    Private Sub lblProduksiKualitas_MouseEnter(sender As Object, e As EventArgs) Handles lblProduksiKualitas.MouseEnter
-        lblProduksiKualitas.BackColor = Color.FromArgb(45, 99, 181)
-    End Sub
-
-    Private Sub lblProduksiKualitas_MouseLeave(sender As Object, e As EventArgs) Handles lblProduksiKualitas.MouseLeave
-        lblProduksiKualitas.BackColor = Color.Transparent
-    End Sub
-
-    Private Sub btnLogoutIK_Click(sender As Object, e As EventArgs) Handles btnLogoutIK.Click
-
-        Dim hasil As DialogResult
-
-        hasil = MessageBox.Show(
-        "Apakah kamu yakin ingin logout?",
-        "Konfirmasi Logout",
-        MessageBoxButtons.YesNo,
-        MessageBoxIcon.Question
-    )
-
-        If hasil = DialogResult.Yes Then
-
-            'Buka Form Login
-            FormLogin.Show()
-
-            'Tutup/sembunyikan dashboard
-            Me.Hide()
-
-        Else
-
-            'Tetap di dashboard
-            Me.Show()
-
-        End If
-
-    End Sub
 End Class

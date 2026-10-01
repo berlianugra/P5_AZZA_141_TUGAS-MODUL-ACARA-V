@@ -105,12 +105,6 @@
     <Compile Include="Form13.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form14.Designer.vb">
-      <DependentUpon>Form14.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form14.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Form15.Designer.vb">
       <DependentUpon>Form15.vb</DependentUpon>
     </Compile>
@@ -121,12 +115,6 @@
       <DependentUpon>Form16.vb</DependentUpon>
     </Compile>
     <Compile Include="Form16.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form17.Designer.vb">
-      <DependentUpon>Form17.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Form17.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form18.Designer.vb">
@@ -189,6 +177,36 @@
     <Compile Include="Form9.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FormDashboardKerugian.Designer.vb">
+      <DependentUpon>FormDashboardKerugian.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormDashboardKerugian.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDashboardUsulan.Designer.vb">
+      <DependentUpon>FormDashboardUsulan.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormDashboardUsulan.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormKerugian.Designer.vb">
+      <DependentUpon>FormKerugian.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormKerugian.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRiwayatUsulan.Designer.vb">
+      <DependentUpon>FormRiwayatUsulan.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormRiwayatUsulan.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormUsulanPerbaikan.Designer.vb">
+      <DependentUpon>FormUsulanPerbaikan.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormUsulanPerbaikan.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Module1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -223,17 +241,11 @@
     <EmbeddedResource Include="Form13.resx">
       <DependentUpon>Form13.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form14.resx">
-      <DependentUpon>Form14.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form15.resx">
       <DependentUpon>Form15.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form16.resx">
       <DependentUpon>Form16.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form17.resx">
-      <DependentUpon>Form17.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form18.resx">
       <DependentUpon>Form18.vb</DependentUpon>
@@ -264,6 +276,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form9.resx">
       <DependentUpon>Form9.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDashboardKerugian.resx">
+      <DependentUpon>FormDashboardKerugian.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDashboardUsulan.resx">
+      <DependentUpon>FormDashboardUsulan.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormKerugian.resx">
+      <DependentUpon>FormKerugian.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRiwayatUsulan.resx">
+      <DependentUpon>FormRiwayatUsulan.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormUsulanPerbaikan.resx">
+      <DependentUpon>FormUsulanPerbaikan.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -448,6 +475,57 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Screenshot 2026-09-27 103004.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WhatsApp Image 2026-09-23 at 4.24.41 PM.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WhatsApp Image 2026-09-23 at 4.24.41 PM1.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WhatsApp Image 2026-09-23 at 4.24.41 PM2.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 142620.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 1426201.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 144442.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 144447.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 144602.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 144755.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 144848.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 144953.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 145352.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 145359.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 1448481.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 1444421.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 1444471.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2026-10-01 150236.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

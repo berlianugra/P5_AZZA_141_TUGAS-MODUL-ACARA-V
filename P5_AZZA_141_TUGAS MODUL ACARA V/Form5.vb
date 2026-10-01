@@ -31,10 +31,13 @@ Public Class FormRiwayatKualitas
         dtpTanggal.Format = DateTimePickerFormat.Custom
         dtpTanggal.CustomFormat = "dd/MM/yyyy"
 
+        DateTimePicker1.Format = DateTimePickerFormat.Custom
+        DateTimePicker1.CustomFormat = "dd/MM/yyyy"
+
     End Sub
 
 
-    '==========================================================RC
+    '==========================================================
     ' DATAGRIDVIEW
     '==========================================================
     Private Sub AturDataGridView()
@@ -128,17 +131,21 @@ Public Class FormRiwayatKualitas
 
             CNN.Close()
 
+
             '==================================================
-            ' SET TANGGAL AWAL KE DATA TERBARU
+            ' SET TANGGAL KE DATA TERBARU
             '==================================================
             If dt.Rows.Count > 0 Then
 
                 If Not IsDBNull(dt.Rows(0)("Tanggal_Produksi")) Then
 
-                    dtpTanggal.Value =
+                    Dim tanggalTerbaru As Date =
                         Convert.ToDateTime(
                             dt.Rows(0)("Tanggal_Produksi")
                         )
+
+                    DateTimePicker1.Value = tanggalTerbaru
+                    dtpTanggal.Value = tanggalTerbaru
 
                 End If
 
@@ -167,7 +174,9 @@ Public Class FormRiwayatKualitas
     '==========================================================
     Private Sub AturKolomGrid()
 
-        If dgvRiwayatKualitas.Columns.Count = 0 Then Exit Sub
+        If dgvRiwayatKualitas.Columns.Count = 0 Then
+            Exit Sub
+        End If
 
         With dgvRiwayatKualitas
 
@@ -226,8 +235,10 @@ Public Class FormRiwayatKualitas
             End If
 
             If .Columns.Contains("Tanggal_Produksi") Then
+
                 .Columns("Tanggal_Produksi").HeaderText =
                     "Tanggal Produksi"
+
                 .Columns("Tanggal_Produksi").Width = 120
 
                 .Columns(
@@ -236,6 +247,7 @@ Public Class FormRiwayatKualitas
                     "dd/MM/yyyy"
 
             End If
+
 
             For Each kolom As DataGridViewColumn In .Columns
 
@@ -297,10 +309,14 @@ Public Class FormRiwayatKualitas
         Catch ex As Exception
 
             Try
+
                 If Rd IsNot Nothing AndAlso
                    Not Rd.IsClosed Then
+
                     Rd.Close()
+
                 End If
+
             Catch
             End Try
 
@@ -334,7 +350,7 @@ Public Class FormRiwayatKualitas
 
 
     '==========================================================
-    ' ENTER PADA TEXTBOX
+    ' ENTER PADA TEXTBOX CARI
     '==========================================================
     Private Sub txtCari_KeyDown(
         sender As Object,
@@ -428,7 +444,6 @@ Public Class FormRiwayatKualitas
 
             CNN.Close()
 
-            'Grafik tetap mengikuti filter tanggal
             BuatPChart()
 
         Catch ex As Exception
@@ -450,7 +465,7 @@ Public Class FormRiwayatKualitas
 
 
     '==========================================================
-    ' TOMBOL TAMPILKAN JENIS NG
+    ' TOMBOL TAMPILKAN
     '==========================================================
     Private Sub btnTampilkan_Click(
         sender As Object,
@@ -498,8 +513,9 @@ Public Class FormRiwayatKualitas
 
             End If
 
-            query &= "ORDER BY TP.Tanggal_Produksi DESC, " &
-                     "K.ID_Kualitas DESC"
+            query &=
+                "ORDER BY TP.Tanggal_Produksi DESC, " &
+                "K.ID_Kualitas DESC"
 
             cmd = New OleDbCommand(
                 query,
@@ -528,7 +544,6 @@ Public Class FormRiwayatKualitas
 
             CNN.Close()
 
-            'Grafik diperbarui
             BuatPChart()
 
         Catch ex As Exception
@@ -550,14 +565,13 @@ Public Class FormRiwayatKualitas
 
 
     '==========================================================
-    ' EVENT DATETIMEPICKER
+    ' EVENT TANGGAL
     '==========================================================
     Private Sub dtpTanggal_ValueChanged(
         sender As Object,
         e As EventArgs
     ) Handles dtpTanggal.ValueChanged
 
-        'Tanggal langsung mengubah grafik
         BuatPChart()
 
     End Sub
@@ -572,20 +586,25 @@ Public Class FormRiwayatKualitas
 
             With Chart1
 
+                'Hapus semua konfigurasi bawaan Designer
                 .Series.Clear()
                 .ChartAreas.Clear()
                 .Legends.Clear()
                 .Titles.Clear()
 
+                '==================================================
+                ' BUAT CHART AREA BARU
+                '==================================================
                 Dim area As New ChartArea(
                     "AreaPChart"
                 )
 
                 area.BackColor = Color.White
 
-                '----------------------------------------------
+
+                '==================================================
                 ' AXIS X
-                '----------------------------------------------
+                '==================================================
                 area.AxisX.Title =
                     "Tanggal Produksi"
 
@@ -606,9 +625,10 @@ Public Class FormRiwayatKualitas
 
                 area.AxisX.MajorGrid.Enabled = False
 
-                '----------------------------------------------
+
+                '==================================================
                 ' AXIS Y
-                '----------------------------------------------
+                '==================================================
                 area.AxisY.Title =
                     "Proporsi NG (%)"
 
@@ -630,6 +650,10 @@ Public Class FormRiwayatKualitas
                 area.AxisY.MajorGrid.LineDashStyle =
                     ChartDashStyle.Dash
 
+
+                '==================================================
+                ' MASUKKAN AREA KE CHART
+                '==================================================
                 .ChartAreas.Add(area)
 
                 .Dock = DockStyle.None
@@ -641,6 +665,8 @@ Public Class FormRiwayatKualitas
 
             End With
 
+
+            'Buat grafik setelah ChartArea selesai dibuat
             BuatPChart()
 
         Catch ex As Exception
@@ -658,29 +684,44 @@ Public Class FormRiwayatKualitas
 
     End Sub
 
+
+    '==========================================================
+    ' BUAT P-CHART
+    '==========================================================
     Private Sub BuatPChart()
 
         Try
 
+            '==================================================
+            ' CEK CHART AREA
+            '==================================================
             If Chart1.ChartAreas.Count = 0 Then
                 Exit Sub
             End If
 
+
+            '==================================================
+            ' BERSIHKAN CHART LAMA
+            '==================================================
             Chart1.Series.Clear()
             Chart1.Legends.Clear()
             Chart1.Titles.Clear()
 
-            '==========================================================
-            ' AMBIL DATA UNTUK GRAFIK
-            ' HANYA DATA YANG SESUAI TANGGAL DIPILIH
-            '==========================================================
 
+            '==================================================
+            ' TANGGAL YANG DIPILIH
+            '==================================================
+            Dim tanggalDipilih As Date =
+                dtpTanggal.Value.Date
+
+
+            '==================================================
+            ' AMBIL DATA SESUAI TANGGAL
+            '==================================================
             Dim dataGrafik As New List(Of DataGridViewRow)
 
-            Dim tanggalDipilih As Date =
-            dtpTanggal.Value.Date
-
-            For Each row As DataGridViewRow In dgvRiwayatKualitas.Rows
+            For Each row As DataGridViewRow In
+                dgvRiwayatKualitas.Rows
 
                 If row.IsNewRow Then
                     Continue For
@@ -688,36 +729,53 @@ Public Class FormRiwayatKualitas
 
                 Try
 
-                    If row.Cells("Tanggal_Produksi").Value Is Nothing Then
+                    If row.Cells(
+                        "Tanggal_Produksi"
+                    ).Value Is Nothing Then
+
                         Continue For
+
                     End If
 
-                    If IsDBNull(row.Cells("Tanggal_Produksi").Value) Then
+
+                    If IsDBNull(
+                        row.Cells(
+                            "Tanggal_Produksi"
+                        ).Value
+                    ) Then
+
                         Continue For
+
                     End If
+
 
                     Dim tanggalData As Date =
-                    Convert.ToDateTime(
-                        row.Cells("Tanggal_Produksi").Value
-                    ).Date
+                        Convert.ToDateTime(
+                            row.Cells(
+                                "Tanggal_Produksi"
+                            ).Value
+                        ).Date
 
-                    If tanggalData = tanggalDipilih Then
+
+                    If tanggalData =
+                        tanggalDipilih Then
 
                         dataGrafik.Add(row)
 
                     End If
 
                 Catch
+
                     Continue For
+
                 End Try
 
             Next
 
 
-            '==========================================================
-            ' JIKA TIDAK ADA DATA PADA TANGGAL TERPILIH
-            '==========================================================
-
+            '==================================================
+            ' TIDAK ADA DATA
+            '==================================================
             If dataGrafik.Count = 0 Then
 
                 AturSumbuY(10)
@@ -727,43 +785,73 @@ Public Class FormRiwayatKualitas
             End If
 
 
-            '==========================================================
-            ' HITUNG TOTAL NG DAN TOTAL PRODUKSI
-            ' UNTUK CL / p-bar
-            '==========================================================
-
+            '==================================================
+            ' HITUNG TOTAL NG DAN PRODUKSI
+            '==================================================
             Dim totalNG As Double = 0
             Dim totalProduksi As Double = 0
 
-            For Each row As DataGridViewRow In dataGrafik
+
+            For Each row As DataGridViewRow
+                In dataGrafik
 
                 Try
 
-                    If row.Cells("Jumlah_NG").Value Is Nothing Then
+                    If row.Cells(
+                        "Jumlah_NG"
+                    ).Value Is Nothing Then
+
                         Continue For
+
                     End If
 
-                    If row.Cells("Total_Produksi").Value Is Nothing Then
+
+                    If row.Cells(
+                        "Total_Produksi"
+                    ).Value Is Nothing Then
+
                         Continue For
+
                     End If
 
-                    If IsDBNull(row.Cells("Jumlah_NG").Value) Then
+
+                    If IsDBNull(
+                        row.Cells(
+                            "Jumlah_NG"
+                        ).Value
+                    ) Then
+
                         Continue For
+
                     End If
 
-                    If IsDBNull(row.Cells("Total_Produksi").Value) Then
+
+                    If IsDBNull(
+                        row.Cells(
+                            "Total_Produksi"
+                        ).Value
+                    ) Then
+
                         Continue For
+
                     End If
+
 
                     Dim jumlahNG As Double =
-                    Convert.ToDouble(
-                        row.Cells("Jumlah_NG").Value
-                    )
+                        Convert.ToDouble(
+                            row.Cells(
+                                "Jumlah_NG"
+                            ).Value
+                        )
+
 
                     Dim produksi As Double =
-                    Convert.ToDouble(
-                        row.Cells("Total_Produksi").Value
-                    )
+                        Convert.ToDouble(
+                            row.Cells(
+                                "Total_Produksi"
+                            ).Value
+                        )
+
 
                     If produksi > 0 Then
 
@@ -773,12 +861,17 @@ Public Class FormRiwayatKualitas
                     End If
 
                 Catch
+
                     Continue For
+
                 End Try
 
             Next
 
 
+            '==================================================
+            ' PRODUKSI TIDAK ADA
+            '==================================================
             If totalProduksi <= 0 Then
 
                 AturSumbuY(10)
@@ -788,114 +881,155 @@ Public Class FormRiwayatKualitas
             End If
 
 
-            '==========================================================
-            ' CL / p-BAR
-            '==========================================================
-
+            '==================================================
+            ' p-BAR / CL
+            '==================================================
             Dim pBar As Double =
-            totalNG / totalProduksi
+                totalNG / totalProduksi
 
 
-            '==========================================================
-            ' SERIES
-            '==========================================================
-
-            Dim seriesP As New Series("Proporsi NG")
+            '==================================================
+            ' SERIES PROPORSI NG
+            '==================================================
+            Dim seriesP As New Series(
+                "Proporsi NG"
+            )
 
             seriesP.ChartType =
-            SeriesChartType.Line
+                SeriesChartType.Line
 
             seriesP.BorderWidth = 3
 
             seriesP.MarkerStyle =
-            MarkerStyle.Circle
+                MarkerStyle.Circle
 
             seriesP.MarkerSize = 7
 
             seriesP.IsValueShownAsLabel = True
 
             seriesP.Label =
-            "#VALY{0.00}%"
+                "#VALY{0.00}%"
 
             seriesP.ToolTip =
-            "Proporsi NG = #VALY{0.00}%"
+                "Proporsi NG = #VALY{0.00}%"
 
 
-            Dim seriesCL As New Series("CL")
+            '==================================================
+            ' SERIES CL
+            '==================================================
+            Dim seriesCL As New Series(
+                "CL"
+            )
 
             seriesCL.ChartType =
-            SeriesChartType.Line
+                SeriesChartType.Line
 
             seriesCL.BorderWidth = 2
 
             seriesCL.BorderDashStyle =
-            ChartDashStyle.Dash
+                ChartDashStyle.Dash
 
 
-            Dim seriesUCL As New Series("UCL")
+            '==================================================
+            ' SERIES UCL
+            '==================================================
+            Dim seriesUCL As New Series(
+                "UCL"
+            )
 
             seriesUCL.ChartType =
-            SeriesChartType.Line
+                SeriesChartType.Line
 
             seriesUCL.BorderWidth = 2
 
             seriesUCL.BorderDashStyle =
-            ChartDashStyle.Dot
+                ChartDashStyle.Dot
 
 
-            Dim seriesLCL As New Series("LCL")
+            '==================================================
+            ' SERIES LCL
+            '==================================================
+            Dim seriesLCL As New Series(
+                "LCL"
+            )
 
             seriesLCL.ChartType =
-            SeriesChartType.Line
+                SeriesChartType.Line
 
             seriesLCL.BorderWidth = 2
 
             seriesLCL.BorderDashStyle =
-            ChartDashStyle.Dot
+                ChartDashStyle.Dot
 
 
-            '==========================================================
-            ' NILAI TERTINGGI UNTUK SUMBU Y
-            '==========================================================
-
+            '==================================================
+            ' NILAI MAKSIMUM
+            '==================================================
             Dim nilaiMaksimum As Double = 0
 
 
-            '==========================================================
-            ' HITUNG SETIAP DATA
-            '==========================================================
-
-            For Each row As DataGridViewRow In dataGrafik
+            '==================================================
+            ' HITUNG DATA P-CHART
+            '==================================================
+            For Each row As DataGridViewRow
+                In dataGrafik
 
                 Try
 
-                    If row.Cells("Jumlah_NG").Value Is Nothing Then
+                    If row.Cells(
+                        "Jumlah_NG"
+                    ).Value Is Nothing Then
+
                         Continue For
+
                     End If
 
-                    If row.Cells("Total_Produksi").Value Is Nothing Then
+
+                    If row.Cells(
+                        "Total_Produksi"
+                    ).Value Is Nothing Then
+
                         Continue For
+
                     End If
 
-                    If IsDBNull(row.Cells("Jumlah_NG").Value) Then
+
+                    If IsDBNull(
+                        row.Cells(
+                            "Jumlah_NG"
+                        ).Value
+                    ) Then
+
                         Continue For
+
                     End If
 
-                    If IsDBNull(row.Cells("Total_Produksi").Value) Then
+
+                    If IsDBNull(
+                        row.Cells(
+                            "Total_Produksi"
+                        ).Value
+                    ) Then
+
                         Continue For
+
                     End If
 
 
                     Dim jumlahNG As Double =
-                    Convert.ToDouble(
-                        row.Cells("Jumlah_NG").Value
-                    )
+                        Convert.ToDouble(
+                            row.Cells(
+                                "Jumlah_NG"
+                            ).Value
+                        )
 
 
                     Dim produksi As Double =
-                    Convert.ToDouble(
-                        row.Cells("Total_Produksi").Value
-                    )
+                        Convert.ToDouble(
+                            row.Cells(
+                                "Total_Produksi"
+                            ).Value
+                        )
 
 
                     If produksi <= 0 Then
@@ -904,55 +1038,52 @@ Public Class FormRiwayatKualitas
 
 
                     '==================================================
-                    ' 1. PROPORSI NG
+                    ' PROPORSI NG
                     '==================================================
-
                     Dim p As Double =
-                    jumlahNG / produksi
+                        jumlahNG / produksi
 
                     Dim persenP As Double =
-                    p * 100
+                        p * 100
 
 
                     '==================================================
-                    ' 2. STANDARD ERROR
-                    '
-                    ' n = Total Produksi DATA TERSEBUT
+                    ' STANDARD ERROR
                     '==================================================
-
                     Dim sigmaP As Double =
-                    Math.Sqrt(
-                        (
-                            pBar *
-                            (1 - pBar)
-                        ) / produksi
-                    )
+                        Math.Sqrt(
+                            (
+                                pBar *
+                                (1 - pBar)
+                            ) / produksi
+                        )
 
 
                     '==================================================
-                    ' 3. UCL
+                    ' UCL
                     '==================================================
-
                     Dim ucl As Double =
-                    pBar + (3 * sigmaP)
+                        pBar + (3 * sigmaP)
 
 
                     '==================================================
-                    ' 4. LCL
+                    ' LCL
                     '==================================================
-
                     Dim lcl As Double =
-                    pBar - (3 * sigmaP)
+                        pBar - (3 * sigmaP)
 
 
                     '==================================================
-                    ' BATASI LCL DAN UCL
+                    ' BATAS LCL
                     '==================================================
-
                     If lcl < 0 Then
                         lcl = 0
                     End If
 
+
+                    '==================================================
+                    ' BATAS UCL
+                    '==================================================
                     If ucl > 1 Then
                         ucl = 1
                     End If
@@ -961,96 +1092,103 @@ Public Class FormRiwayatKualitas
                     '==================================================
                     ' KONVERSI KE PERSEN
                     '==================================================
-
                     Dim persenCL As Double =
-                    pBar * 100
+                        pBar * 100
 
                     Dim persenUCL As Double =
-                    ucl * 100
+                        ucl * 100
 
                     Dim persenLCL As Double =
-                    lcl * 100
+                        lcl * 100
 
 
                     '==================================================
                     ' TANGGAL
                     '==================================================
-
                     Dim tanggal As String = ""
 
+
                     If Not IsDBNull(
-                    row.Cells("Tanggal_Produksi").Value
-                ) Then
+                        row.Cells(
+                            "Tanggal_Produksi"
+                        ).Value
+                    ) Then
 
                         tanggal =
-                        Convert.ToDateTime(
-                            row.Cells("Tanggal_Produksi").Value
-                        ).ToString("dd/MM")
+                            Convert.ToDateTime(
+                                row.Cells(
+                                    "Tanggal_Produksi"
+                                ).Value
+                            ).ToString("dd/MM")
 
                     End If
 
 
                     '==================================================
-                    ' MASUKKAN TITIK PROPORSI
+                    ' MASUKKAN PROPORSI
                     '==================================================
-
                     Dim indexP As Integer =
-                    seriesP.Points.AddY(persenP)
+                        seriesP.Points.AddY(
+                            persenP
+                        )
 
-                    seriesP.Points(indexP).AxisLabel =
-                    tanggal
+
+                    seriesP.Points(
+                        indexP
+                    ).AxisLabel =
+                        tanggal
 
 
                     '==================================================
                     ' MASUKKAN CL
                     '==================================================
-
                     seriesCL.Points.AddY(
-                    persenCL
-                )
+                        persenCL
+                    )
 
 
                     '==================================================
                     ' MASUKKAN UCL
                     '==================================================
-
                     seriesUCL.Points.AddY(
-                    persenUCL
-                )
+                        persenUCL
+                    )
 
 
                     '==================================================
                     ' MASUKKAN LCL
                     '==================================================
-
                     seriesLCL.Points.AddY(
-                    persenLCL
-                )
+                        persenLCL
+                    )
 
 
                     '==================================================
                     ' CARI NILAI TERBESAR
                     '==================================================
-
                     If persenP > nilaiMaksimum Then
 
-                        nilaiMaksimum = persenP
+                        nilaiMaksimum =
+                            persenP
 
                     End If
 
 
                     If persenUCL > nilaiMaksimum Then
 
-                        nilaiMaksimum = persenUCL
+                        nilaiMaksimum =
+                            persenUCL
 
                     End If
 
 
                     If persenLCL > nilaiMaksimum Then
 
-                        nilaiMaksimum = persenLCL
+                        nilaiMaksimum =
+                            persenLCL
 
                     End If
+
 
                 Catch
 
@@ -1061,10 +1199,9 @@ Public Class FormRiwayatKualitas
             Next
 
 
-            '==========================================================
-            ' MASUKKAN SERIES KE CHART
-            '==========================================================
-
+            '==================================================
+            ' MASUKKAN SERIES
+            '==================================================
             Chart1.Series.Add(seriesP)
 
             Chart1.Series.Add(seriesCL)
@@ -1074,81 +1211,82 @@ Public Class FormRiwayatKualitas
             Chart1.Series.Add(seriesLCL)
 
 
-            '==========================================================
-            ' LEGEND
-            '==========================================================
-
+            '==================================================
+            ' LEGEND TEXT
+            '==================================================
             seriesP.LegendText =
-            "Proporsi NG"
+                "Proporsi NG"
 
             seriesCL.LegendText =
-            "CL"
+                "CL"
 
             seriesUCL.LegendText =
-            "UCL"
+                "UCL"
 
             seriesLCL.LegendText =
-            "LCL"
+                "LCL"
 
 
+            '==================================================
+            ' LEGEND
+            '==================================================
             Dim legend As New Legend()
 
             legend.Docking =
-            Docking.Bottom
+                Docking.Bottom
 
             legend.Alignment =
-            StringAlignment.Center
+                StringAlignment.Center
 
             legend.Font =
-            New Font(
-                "Segoe UI",
-                8
-            )
+                New Font(
+                    "Segoe UI",
+                    8
+                )
 
             Chart1.Legends.Add(legend)
 
 
-            '==========================================================
+            '==================================================
             ' JUDUL
-            '==========================================================
-
+            '==================================================
             Dim title As New Title(
-            "P-Chart Produk NG"
-        )
+                "P-Chart Produk NG"
+            )
 
             title.Font =
-            New Font(
-                "Segoe UI",
-                12,
-                FontStyle.Bold
-            )
+                New Font(
+                    "Segoe UI",
+                    12,
+                    FontStyle.Bold
+                )
 
             Chart1.Titles.Add(title)
 
 
-            '==========================================================
-            ' SUMBU Y
-            '==========================================================
-
+            '==================================================
+            ' ATUR SUMBU Y
+            '==================================================
             AturSumbuY(
-            nilaiMaksimum
-        )
+                nilaiMaksimum
+            )
 
 
         Catch ex As Exception
 
             MessageBox.Show(
-            "Gagal membuat P-Chart." &
-            vbCrLf & vbCrLf &
-            ex.Message,
-            "Error",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Error
-        )
+                "Gagal membuat P-Chart." &
+                vbCrLf & vbCrLf &
+                ex.Message,
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            )
 
         End Try
 
     End Sub
+
 
     '==========================================================
     ' ATUR SUMBU Y
@@ -1161,7 +1299,9 @@ Public Class FormRiwayatKualitas
             Exit Sub
         End If
 
+
         Dim maksimum As Double
+
 
         If nilaiMaksimum <= 0 Then
 
@@ -1169,7 +1309,6 @@ Public Class FormRiwayatKualitas
 
         Else
 
-            'Tambahkan ruang 20% di atas titik tertinggi
             maksimum =
                 Math.Ceiling(
                     nilaiMaksimum * 1.2
@@ -1178,7 +1317,6 @@ Public Class FormRiwayatKualitas
         End If
 
 
-        'Jangan sampai terlalu besar
         If maksimum > 100 Then
             maksimum = 100
         End If
@@ -1189,21 +1327,33 @@ Public Class FormRiwayatKualitas
         End If
 
 
-        With Chart1.ChartAreas(
-            "AreaPChart"
-        ).AxisY
+        '==================================================
+        ' PENTING:
+        ' TIDAK LAGI MEMANGGIL ChartAreas("AreaPChart")
+        '
+        ' Kita langsung ambil ChartArea pertama.
+        ' Jadi tidak peduli nama AreaChart,
+        ' ChartArea1, atau AreaPChart.
+        '==================================================
+        Dim area As ChartArea =
+            Chart1.ChartAreas(0)
+
+
+        With area.AxisY
 
             .Minimum = 0
 
             .Maximum = maksimum
 
-            'Interval otomatis
+
             Dim interval As Double =
                 maksimum / 5
+
 
             If interval <= 0 Then
                 interval = 1
             End If
+
 
             .Interval = interval
 
@@ -1227,6 +1377,7 @@ Public Class FormRiwayatKualitas
             End If
 
         Catch
+
         End Try
 
     End Sub
@@ -1263,6 +1414,7 @@ Public Class FormRiwayatKualitas
             MessageBoxButtons.YesNo,
             MessageBoxIcon.Question
         )
+
 
         If hasil = DialogResult.Yes Then
 

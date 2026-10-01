@@ -599,7 +599,7 @@ Public Class FormLogin
 
                     Case "Supervisor Quality Assurance"
 
-                        Form2.Show()
+                        FormKerugian.Show()
 
 
                 '================================================
